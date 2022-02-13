@@ -1,9 +1,23 @@
 const MongoClient = require('mongodb').MongoClient;
 
-const url =
-  'mongodb+srv://diegolucasq:diegolucasq@cluster0.tpzao.mongodb.net/products?retryWrites=true&w=majority';
+const url = require('./url');
 
-const createProduct = async (req, res, next) => {};
+const createProduct = async (req, res, next) => {
+  const newProduct = {
+    name: req.body.name,
+    price: req.body.price,
+  };
+
+  const client = new MongoClient(url);
+
+  try {
+    await client.connect();
+    const db = client.db();
+    const result = db.collection('products').insertOne(newProduct);
+  } catch (err) {
+    return res.json({ message: 'could not store data.' });
+  }
+};
 
 const getProducts = async (req, res, next) => {};
 
